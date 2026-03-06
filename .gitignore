@@ -1,0 +1,14 @@
+venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+data/events/interactions.csv
+
+*.faiss
+*.npy
+*.npz
+
+data/raw/*
+data/processed/*
+data/events/*
