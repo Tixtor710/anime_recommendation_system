@@ -19,7 +19,7 @@ This project demonstrates the full ML system pipeline:
 
 # System Architecture
 
-![architecture](docs/architecture.png)
+![architecture](docs/Architecture.png)
 
 Pipeline overview:
 
