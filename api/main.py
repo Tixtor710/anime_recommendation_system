@@ -5,7 +5,7 @@ import pandas as pd
 from pydantic import BaseModel
 from datetime import datetime
 import os
-
+app = FastAPI()
 class InteractionEvent(BaseModel):
     user_index: int
     anime_id: int
