@@ -246,7 +246,32 @@ Example response:
   ]
 }
 ```
+---
+## Live API Demo
 
+Interactive API documentation:
+
+https://web-production-b9e36.up.railway.app/docs
+
+Example endpoint:
+
+GET /recommend/{user_index}
+
+### Example Request
+
+```bash
+curl https://web-production-b9e36.up.railway.app/recommend/10
+
+{
+  "user_index": 10,
+  "recommendations": [
+    {
+      "anime_id": 5114,
+      "title": "Fullmetal Alchemist: Brotherhood",
+      "score": 9.2
+    }
+  ]
+}
 
 ---
 
