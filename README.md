@@ -1,72 +1,77 @@
-# Anime Recommendation System (Vector Search + FastAPI)
+# Anime Recommendation System (FAISS + FastAPI)
 
-A scalable anime recommendation system that combines **embedding-based similarity**, **FAISS vector search**, and a **FastAPI inference service**.
+A production-style anime recommendation system that combines **embedding-based collaborative filtering**, **FAISS vector search**, and a **FastAPI inference service**.
 
-The system generates anime and user embeddings from interaction data and serves real-time recommendations via a lightweight API.
+The system learns latent embeddings from user–anime interaction data and serves real-time recommendations through a lightweight REST API.
 
-This project demonstrates the full ML system pipeline:
+This project demonstrates an end-to-end ML engineering pipeline:
 
-- data ingestion
-- preprocessing
-- embedding generation
-- vector indexing
-- recommendation retrieval
-- API serving
-- system evaluation
+- Data ingestion
+- Data preprocessing
+- Embedding model training
+- Vector indexing with FAISS
+- Recommendation retrieval
+- FastAPI deployment
+- System benchmarking and evaluation
 
 
 ---
 
 # System Architecture
 
-![architecture](docs/Architecture.png)
+![Architecture](docs/Architecture.png)
 
-Pipeline overview:
+### Pipeline Overview
 
-1. **Raw Data**
-   - Anime metadata
-   - User–anime interaction data
+**1. Raw Data**
 
-2. **Data Pipeline**
-   - Cleaning and preprocessing
-   - User–item interaction matrix creation
+Input datasets include:
 
-3. **Embedding Model**
-   - Matrix factorization generates latent vectors for:
-     - users
-     - anime
+- Anime metadata
+- User–anime interaction records
 
-4. **Vector Store**
-   - Anime embeddings indexed with **FAISS**
-   - Enables fast similarity search
+**2. Data Pipeline**
 
-5. **API Layer**
-   - FastAPI serves recommendation endpoints
-   - Handles:
-     - similar anime queries
-     - personalized recommendations
-     - interaction logging
-     - trending detection
+The preprocessing stage performs:
+
+- Data cleaning
+- Feature preparation
+- User–item interaction matrix construction
+
+**3. Embedding Model**
+
+Matrix factorization generates latent embeddings for:
+
+- Users
+- Anime titles
+
+These embeddings capture similarity relationships in the interaction space.
+
+**4. Vector Store**
+
+Anime embeddings are indexed using **FAISS** to enable fast similarity search.
+
+This allows the system to retrieve nearest neighbors in milliseconds.
+
+**5. API Layer**
+
+A **FastAPI service** exposes the recommendation engine through REST endpoints.
+
+The API supports:
+
+- Similar anime search
+- Personalized recommendations
+- Interaction logging
+- Trending detection
 
 
 ---
-## Installation
 
-### Runtime (API server)
-
-```bash
-pip install -r requirements.txt
-
-### Development/ Training
-```bash
-pip install -r requirements-dev.txt
-
----
 # Features
 
-## Content Similarity
+## Similar Anime Search
 
-Find anime similar to a given title using embedding distance.
+Retrieve anime similar to a given title using embedding similarity.
 
 Endpoint:
 
@@ -74,63 +79,69 @@ Endpoint:
 GET /similar/{anime_id}
 ```
 
-Returns the most similar anime using FAISS nearest-neighbor search.
-
+The system performs FAISS nearest-neighbor search on anime embeddings.
 
 ---
 
 ## Personalized Recommendations
 
+Generate user-specific recommendations based on user embeddings.
+
+Endpoint:
+
 ```
 GET /recommend/{user_index}
 ```
 
-Recommendations based on user embedding proximity in vector space.
+The recommendation system:
 
-System also filters:
-
-- previously watched anime
-- invalid items
-- missing metadata
-
+- finds nearby anime embeddings
+- filters previously watched titles
+- removes invalid or missing entries
 
 ---
 
 ## Interaction Tracking
 
+User activity is recorded for analytics and retraining.
+
+Endpoint:
+
 ```
 POST /interaction
 ```
 
-Logs user activity such as:
+Logged interactions include:
 
 - watch
 - click
 - view
 
-Used for:
+These records support:
 
 - recommendation filtering
 - trending analytics
 - future model retraining
 
-
 ---
 
-## Trending Detection
+## Trending Anime Detection
+
+Trending titles are computed based on recent user interactions.
+
+Endpoint:
 
 ```
 GET /trending
 ```
 
-Calculates trending anime based on recent interaction activity.
-
+This feature helps highlight popular or rapidly growing anime titles.
 
 ---
 
 # Performance
 
-Vector search latency using **FAISS**.
+Vector search performance using **FAISS**.
 
 | Metric | Value |
 |------|------|
@@ -139,16 +150,15 @@ Vector search latency using **FAISS**.
 | Top-10 retrieval latency | ~1 ms |
 | Index type | FAISS FlatL2 |
 
-
 ---
 
 # Dataset Statistics
 
 | Metric | Value |
 |------|------|
-| Anime | 6,143 |
+| Anime titles | 6,143 |
 | Users | 73,516 |
-| Interaction records | ~7M |
+| Interaction records | ~7 million |
 | Embedding dimension | 64 |
 
 Dataset source:
@@ -156,77 +166,51 @@ Dataset source:
 Anime Recommendations Database  
 https://www.kaggle.com/datasets/CooperUnion/anime-recommendations-database
 
-Datasets are not included in the repository due to GitHub file size limits.
+Datasets are **not included in the repository** due to GitHub file size limits.
 
-Place downloaded data in:
+Place downloaded files in:
 
 ```
 data/raw/
 ```
 
-
 ---
 
-# Project Structure
+# Installation
 
-```
-anime_recommendation_system/
-│
-├── api/
-│   └── main.py                # FastAPI service
-│
-├── data_pipeline/
-│   ├── ingest.py
-│   ├── preprocess.py
-│   ├── preprocess_interactions.py
-│   └── build_matrix.py
-│
-├── models/
-│   └── train_model.py         # embedding model training
-│
-├── vector_store/
-│   ├── build_index.py
-│   └── query_index.py
-│
-├── evaluation/
-│   ├── benchmark.py
-│   └── system_stats.py
-│
-├── docs/
-│   └── architecture.png
-│
-└── README.md
-```
-
-
----
-
-# Running the API
-
-Install dependencies:
+### Install runtime dependencies
 
 ```
 pip install -r requirements.txt
 ```
 
-Run the API:
+### Install development / training dependencies
+
+```
+pip install -r requirements-dev.txt
+```
+
+---
+
+# Running the API
+
+Start the FastAPI server:
 
 ```
 uvicorn api.main:app --reload
 ```
 
-Open the interactive documentation:
+Access interactive documentation:
 
 ```
 http://127.0.0.1:8000/docs
 ```
 
-
 ---
 
 # Example API Usage
 
-Get similar anime
+Retrieve similar anime:
 
 ```
 GET /similar/100
@@ -246,22 +230,24 @@ Example response:
   ]
 }
 ```
+
 ---
-## Live API Demo
+
+# Live API Demo
 
 Interactive API documentation:
 
 https://web-production-b9e36.up.railway.app/docs
 
-Example endpoint:
+Example request:
 
-GET /recommend/{user_index}
-
-### Example Request
-
-```bash
+```
 curl https://web-production-b9e36.up.railway.app/recommend/10
+```
 
+Example response:
+
+```json
 {
   "user_index": 10,
   "recommendations": [
@@ -272,31 +258,66 @@ curl https://web-production-b9e36.up.railway.app/recommend/10
     }
   ]
 }
+```
+
+---
+
+# Project Structure
+
+```
+anime_recommendation_system/
+│
+├── api/
+│   └── main.py                 # FastAPI service
+│
+├── data_pipeline/
+│   ├── ingest.py
+│   ├── preprocess.py
+│   ├── preprocess_interactions.py
+│   └── build_matrix.py
+│
+├── models/
+│   └── train_model.py          # embedding model training
+│
+├── vector_store/
+│   ├── build_index.py
+│   └── query_index.py
+│
+├── evaluation/
+│   ├── benchmark.py
+│   └── system_stats.py
+│
+├── docs/
+│   └── architecture.png
+│
+└── README.md
+```
 
 ---
 
 # Evaluation
 
-Benchmark utilities measure:
+Benchmark scripts measure:
 
 - vector search latency
 - embedding statistics
 - dataset coverage
 
-Scripts:
+Scripts available in:
 
 ```
 evaluation/benchmark.py
 evaluation/system_stats.py
 ```
 
-
 ---
 
 # Future Improvements
 
-- hybrid recommendation model (content + collaborative filtering)
-- approximate FAISS indexing (IVF / HNSW)
-- online retraining pipeline
-- real-time interaction streaming
-- containerized deployment (Docker)
+Potential extensions for scaling and model quality:
+
+- Hybrid recommendation system (content + collaborative filtering)
+- Approximate FAISS indexes (IVF / HNSW)
+- Online model retraining pipeline
+- Real-time interaction streaming
+- Dockerized deployment
