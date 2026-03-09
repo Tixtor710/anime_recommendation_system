@@ -50,7 +50,18 @@ Pipeline overview:
 
 
 ---
+## Installation
 
+### Runtime (API server)
+
+```bash
+pip install -r requirements.txt
+
+### Development/ Training
+```bash
+pip install -r requirements-dev.txt
+
+---
 # Features
 
 ## Content Similarity

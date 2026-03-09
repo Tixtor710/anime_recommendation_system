@@ -90,7 +90,8 @@ def get_trending_anime(limit=10):
     return results
 app = FastAPI()
 #Load metadata
-anime_df = pd.read_csv("data/raw/anime_cleaned.csv")
+anime_df = pd.read_csv("data/processed/anime_mapping.csv")
+
 
 anime_df = anime_df.set_index("anime_id")
 
