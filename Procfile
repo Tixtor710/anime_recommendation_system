@@ -1,1 +1,1 @@
-web: uvicorn api.main:app --host 0.0.0.0 --port $PORT
+web: python scripts/download_models.py && uvicorn api.main:app --host 0.0.0.0 --port $PORT
